@@ -2,7 +2,7 @@
 
 # License
 
-[GPL v3 or later](LICENSE.md)
+[LGPL v3 or later](LICENSE.md)
 
 ### Code status
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Firesphere/silverstripe-csp-headers/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Firesphere/silverstripe-csp-headers/?branch=master)
