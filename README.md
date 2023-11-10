@@ -5,7 +5,7 @@
 [LGPL v3 or later](LICENSE.md)
 
 ### Code status
-[![Woodpecker-CI](https://ci.codeberg.org/repos/12772)](https://ci.codeberg.org/api/badges/12772/status.svg?branch=main)
+![Woodpecker-CI](https://ci.codeberg.org/api/badges/12772/status.svg?branch=main)
 
 Adds CSP headers to your request, based on configuration in a yml file.
 
