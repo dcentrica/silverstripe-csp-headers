@@ -5,12 +5,7 @@
 [LGPL v3 or later](LICENSE.md)
 
 ### Code status
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Firesphere/silverstripe-csp-headers/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Firesphere/silverstripe-csp-headers/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/Firesphere/silverstripe-csp-headers/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Firesphere/silverstripe-csp-headers/?branch=master)
-[![CircleCI](https://circleci.com/gh/Firesphere/silverstripe-csp-headers.svg?style=svg)](https://circleci.com/gh/Firesphere/silverstripe-csp-headers)
-[![Maintainability](https://api.codeclimate.com/v1/badges/8a4483b471112003ccaf/maintainability)](https://codeclimate.com/github/Firesphere/silverstripe-csp-headers/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/8a4483b471112003ccaf/test_coverage)](https://codeclimate.com/github/Firesphere/silverstripe-csp-headers/test_coverage)
-[![codecov](https://codecov.io/gh/Firesphere/silverstripe-csp-headers/branch/master/graph/badge.svg)](https://codecov.io/gh/Firesphere/silverstripe-csp-headers)
+[![Woodpecker-CI](https://ci.codeberg.org/repos/12772)](https://ci.codeberg.org/api/badges/12772/status.svg?branch=main)
 
 Adds CSP headers to your request, based on configuration in a yml file.
 
