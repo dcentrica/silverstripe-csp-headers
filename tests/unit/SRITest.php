@@ -57,7 +57,7 @@ class SRITest extends SapphireTest
         /** @var SRI $sri */
         SRI::get()->removeAll();
         $sri = SRI::findOrCreate('/README.md');
-        $hash = hash(CSPBackend::SHA384, file_get_contents('readme.md'), true);
+        $hash = hash(CSPBackend::SHA384, file_get_contents('README.md'), true);
 
         $this->assertEquals(base64_encode($hash), $sri->SRI);
         $this->assertGreaterThan(0, $sri->ID);
