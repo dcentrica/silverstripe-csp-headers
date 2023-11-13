@@ -5,10 +5,15 @@ namespace Firesphere\CSPHeaders\Builders;
 use Firesphere\CSPHeaders\Extensions\ControllerCSPExtension;
 use Firesphere\CSPHeaders\View\CSPBackend;
 use SilverStripe\Control\Controller;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\View\HTML;
 
 class BaseBuilder
 {
+    /**
+     * @var HTTPRequest|null Cache to not constantly query around
+     */
+    protected static $currentRequest;
 
     /**
      * @param array $requirements
@@ -73,4 +78,27 @@ class BaseBuilder
             );
         }
     }
+
+    /**
+     * @return HTTPRequest|null
+     */
+    public static function getCurrentRequest(): HTTPRequest|null
+    {
+        if (!self::$currentRequest && Controller::has_curr()) {
+            self::setCurrentRequest(Controller::curr()->getRequest());
+        }
+
+        return self::$currentRequest;
+    }
+
+    /**
+     * @param HTTPRequest $currentRequest
+     * @return void
+     */
+    public static function setCurrentRequest(HTTPRequest $currentRequest): void
+    {
+        self::$currentRequest = $currentRequest;
+    }
+
+
 }
