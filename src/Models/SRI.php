@@ -126,7 +126,7 @@ class SRI extends DataObject implements PermissionProvider
 
             foreach ($folders as $folder) {
                 $filename = Path::join($folder, $this->File);
-                if (file_exists($filename)) {
+                if (file_exists($filename) && is_file($filename)) {
                     $body = file_get_contents($filename);
                     break;
                 }
