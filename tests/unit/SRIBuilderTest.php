@@ -36,7 +36,7 @@ class SRIBuilderTest extends SapphireTest
         $builder = new SRIBuilder();
         $builder->buildSRI('composer.json', []);
         // skip files starting with composer
-        $builder->config()->set('skip_domains', ['composer']);
+        SRIBuilder::config()->set('skip_domains', ['composer']);
         Cookie::set('buildHeaders', 'true');
         // Should not have added integrity to the array
         $this->assertEquals([], $builder->buildSRI('composer.json', []));

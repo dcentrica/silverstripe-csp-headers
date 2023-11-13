@@ -126,7 +126,7 @@ class CSSBuilderTest extends SapphireTest
         CSPBackend::config()->set('cssSRI', true);
         CSPBackend::setCssSRI(true);
         $this->assertTrue(CSPBackend::isCssSRI());
-        $requirements = $builder->buildTags('composer.json', [], [], '/');
+        $requirements = $builder->buildTags('LICENSE.md', [], [], '/');
         $this->assertStringContainsString('integrity=', $requirements[0]);
         // Shouldn't add integrity if not enabled
         CSPBackend::config()->set('cssSRI', false);
@@ -141,7 +141,7 @@ class CSSBuilderTest extends SapphireTest
         $request->offsetSet('build-headers', 'true');
         $controller->onBeforeInit();
         $this->assertFalse(CSPBackend::isCssSRI());
-        $requirements = $builder->buildTags('composer.json', [], [], '/');
+        $requirements = $builder->buildTags('CONTRIBUTING.md', [], [], '/');
         $this->assertStringContainsString('integrity=', $requirements[0]);
         $request->offsetUnset('build-headers');
         Cookie::force_expiry('buildHeaders');
