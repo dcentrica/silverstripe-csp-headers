@@ -49,7 +49,7 @@ class CSSBuilder extends BaseBuilder implements BuilderInterface
         ], $attributes);
 
 
-        $request = Controller::has_curr() ? Controller::curr()->getRequest() : null;
+        $request = self::getCurrentRequest();
         $cookieSet = $request ? ControllerCSPExtension::checkCookie($request) : false;
         if (CSPBackend::isCssSRI() || $cookieSet) {
             $htmlAttributes = $this->getSriBuilder()->buildSRI($file, $htmlAttributes);

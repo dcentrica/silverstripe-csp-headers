@@ -49,7 +49,7 @@ class JSBuilder extends BaseBuilder implements BuilderInterface
         ], $attributes);
 
         // Build SRI if it's enabled
-        $request = Controller::has_curr() ? Controller::curr()->getRequest() : null;
+        $request = self::getCurrentRequest();
         $cookieSet = $request ? ControllerCSPExtension::checkCookie($request) : false;
         if (CSPBackend::isJsSRI() || $cookieSet) {
             $htmlAttributes = $this->getSriBuilder()->buildSRI($file, $htmlAttributes);

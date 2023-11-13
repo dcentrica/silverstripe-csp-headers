@@ -3,6 +3,7 @@
 
 namespace Firesphere\CSPHeaders\Tests;
 
+use Firesphere\CSPHeaders\Builders\BaseBuilder;
 use Firesphere\CSPHeaders\Builders\JSBuilder;
 use Firesphere\CSPHeaders\Builders\SRIBuilder;
 use Firesphere\CSPHeaders\Extensions\ControllerCSPExtension;
@@ -142,6 +143,7 @@ class JSBuilderTest extends SapphireTest
         // Should add integrity if not enabled but forced by build headers in request
         $request = Controller::curr()->getRequest();
         $request->offsetSet('build-headers', 'true');
+        BaseBuilder::setCurrentRequest($request);
         $this->assertFalse(CSPBackend::isJsSRI());
         $controller->onBeforeInit();
         $requirements = $builder->buildTags('composer.json', [], [], '/');

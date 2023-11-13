@@ -126,6 +126,7 @@ class CSSBuilderTest extends SapphireTest
         CSPBackend::config()->set('cssSRI', true);
         CSPBackend::setCssSRI(true);
         $this->assertTrue(CSPBackend::isCssSRI());
+        CSSBuilder::setCurrentRequest($controller->getRequest());
         $requirements = $builder->buildTags('composer.json', [], [], '/');
         $this->assertStringContainsString('integrity=', $requirements[0]);
         // Shouldn't add integrity if not enabled
@@ -133,6 +134,7 @@ class CSSBuilderTest extends SapphireTest
         CSPBackend::setCssSRI(false);
         $this->assertFalse(CSPBackend::isCssSRI());
         $controller->onBeforeInit();
+        CSSBuilder::setCurrentRequest($controller->getRequest());
         $requirements = $builder->buildTags('composer.json', [], [], '/');
         $this->assertStringNotContainsString('integrity=', $requirements[0]);
 
@@ -141,6 +143,7 @@ class CSSBuilderTest extends SapphireTest
         $request->offsetSet('build-headers', 'true');
         $controller->onBeforeInit();
         $this->assertFalse(CSPBackend::isCssSRI());
+        CSSBuilder::setCurrentRequest($controller->getRequest());
         $requirements = $builder->buildTags('composer.json', [], [], '/');
         $this->assertStringContainsString('integrity=', $requirements[0]);
         $request->offsetUnset('build-headers');
