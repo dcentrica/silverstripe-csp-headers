@@ -118,10 +118,10 @@ class SRI extends DataObject implements PermissionProvider
             $body = $result->getBody()->getContents();
         } else {
             $folders = [
+                Director::baseFolder(), // This is a last-resort fallback
                 Director::publicFolder() . '/_resources',
                 Director::publicFolder() . '/resources',
                 Director::publicFolder(),
-                Director::baseFolder(), // This is a last-resort fallback
             ];
 
             foreach ($folders as $folder) {
