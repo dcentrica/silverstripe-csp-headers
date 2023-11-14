@@ -12,6 +12,11 @@ use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\View\Requirements_Backend;
 
+/**
+ * Class Firesphere\CSPHeaders\View\Backend
+ *
+ * @package Firesphere\CSPHeaders
+ */
 class CSPBackend extends Requirements_Backend
 {
     use Configurable;
@@ -32,25 +37,33 @@ class CSPBackend extends Requirements_Backend
      * @param $js
      * @param null|string $uniquenessID
      */
-    public function customScript($js, $uniquenessID = null): void
+    /**
+     * @inheritDoc
+     * @param $script
+     * @param $uniquenessID
+     * @return void
+     */
+    public function customScript($script, $uniquenessID = null): void
     {
-        ControllerCSPExtension::addJS($js);
+        ControllerCSPExtension::addJS($script);
 
-        parent::customScript($js, $uniquenessID);
+        parent::customScript($script, $uniquenessID);
     }
 
     /**
-     * @param $css
+     * @inheritDoc
+     * @param $script
      * @param null|string $uniquenessID
      */
-    public function customCSS($css, $uniquenessID = null): void
+    public function customCSS($script, $uniquenessID = null): void
     {
-        ControllerCSPExtension::addCSS($css);
+        ControllerCSPExtension::addCSS($script);
 
-        parent::customCSS($css, $uniquenessID);
+        parent::customCSS($script, $uniquenessID);
     }
 
     /**
+     * @inheritDoc
      * Add the following custom HTML code to the `<head>` section of the page
      * @param string $html Custom HTML code
      * @param string|null $uniquenessID A unique ID that ensures a piece of code is only added once
@@ -111,7 +124,7 @@ class CSPBackend extends Requirements_Backend
     /**
      * Register the given JavaScript file as required.
      *
-     * @param string $file Either relative to docroot or in the form "vendor/package:resource"
+     * @param string|null $file Either relative to docroot or in the form "vendor/package:resource"
      * @param array $options List of options. Available options include:
      * - 'provides' : List of scripts files included in this file
      * - 'async' : Boolean value to set async attribute to script tag

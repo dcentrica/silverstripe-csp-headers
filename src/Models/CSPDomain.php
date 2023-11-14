@@ -15,6 +15,8 @@ use SilverStripe\Security\PermissionProvider;
 /**
  * Class \Firesphere\CSPHeaders\Models\CSPDomain
  *
+ * @package Firesphere\CSPHeaders
+ *
  * @property string $Domain
  * @property string $Source
  * @method ManyManyList|Page[] Pages()

@@ -7,7 +7,9 @@ use SilverStripe\Control\HTTPResponse;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * class \Firesphere\CSPHeaders\Helpers\CSPConvertor
+ * Class \Firesphere\CSPHeaders\Helpers\CSPConvertor
+ *
+ * @package Firesphere\CSPHeaders
  *
  * Helper class to convert a manually written CSP header to YML
  */

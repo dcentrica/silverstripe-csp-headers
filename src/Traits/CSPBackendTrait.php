@@ -8,6 +8,8 @@ use Firesphere\CSPHeaders\Builders\JSBuilder;
 use Firesphere\CSPHeaders\View\CSPBackend;
 
 /**
+ * Trait Firesphere\CSPHeaders\Traits\CSPBackendTrait
+ *
  * Trait CSPBackendTrait contains all variables, static and dynamic, and their respective getters and setters
  * This is to keep the CSPBackend class itself more readable
  * @package Firesphere\CSPHeaders\Traits
@@ -15,12 +17,14 @@ use Firesphere\CSPHeaders\View\CSPBackend;
 trait CSPBackendTrait
 {
     /**
+     * JS SRI defaults to true, although it may be problematic
+     * CDNs could cause some problems at times.
      * @var bool
      */
     protected static $jsSRI;
     /**
      * CSS defaults to false.
-     * It's causing a lot of trouble with CDN's usually
+     * It's causing a lot of trouble with CDNs usually
      * @var bool
      */
     protected static $cssSRI;

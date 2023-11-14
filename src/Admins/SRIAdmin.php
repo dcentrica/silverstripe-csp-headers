@@ -9,6 +9,7 @@ use SilverStripe\Admin\ModelAdmin;
 /**
  * Class \Firesphere\CSPHeaders\Admins\SRIAdmin
  *
+ * @package Firesphere\CSPHeaders
  */
 class SRIAdmin extends ModelAdmin
 {

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Firesphere\CSPHeaders\Extensions;
 
 use Exception;
@@ -9,9 +8,7 @@ use Firesphere\CSPHeaders\View\CSPBackend;
 use LeKoala\DebugBar\DebugBar;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\CSPBuilder\CSPBuilder;
-use phpDocumentor\Reflection\Types\Boolean;
 use SilverStripe\Admin\LeftAndMain;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Director;
@@ -27,6 +24,8 @@ use function hash;
 /**
  * Class \Firesphere\CSPHeaders\Extensions\ControllerCSPExtension
  *
+ * @package Firesphere\CSPHeaders
+ *
  * This extension is applied to the PageController, to avoid duplicates.
  * Any duplicates may be caused by extended classes. It should however, not affect the outcome
  *
@@ -34,9 +33,13 @@ use function hash;
  */
 class ControllerCSPExtension extends Extension
 {
+    /**
+     * @var bool Public setting to avoid certain unnecessary effects during testing
+     */
     public static $isTesting = false;
     /**
      * Base CSP configuration
+     * @config
      * @var array
      */
     protected static $csp_config;
@@ -49,11 +52,18 @@ class ControllerCSPExtension extends Extension
      */
     protected static $inlineCSS = [];
     /**
+     * @var string[] YML keys to actual header name
+     */
+    protected static $policyKeyHeader = [
+        'referrer'             => 'Referrer-Policy',
+        'frame-options'        => 'X-Frame-Options',
+        'content-type-options' => 'X-Content-Type-Options'
+    ];
+    /**
      * Should we generate the policy headers or not
      * @var bool
      */
     protected $addPolicyHeaders;
-
     /**
      * Should permission policies be added
      * @var bool
@@ -63,10 +73,6 @@ class ControllerCSPExtension extends Extension
      * @var string randomised sha512 nonce for enabling scripts if you don't want to use validating of the full script
      */
     protected $nonce;
-    /**
-     * @var array
-     */
-    protected $headTags = [];
 
     /**
      * @param string $js
@@ -104,7 +110,7 @@ class ControllerCSPExtension extends Extension
      * Add the needed headers from the database and config
      * @throws Exception
      */
-    public function onBeforeInit()
+    public function onBeforeInit(): void
     {
         if (self::$isTesting || !DB::is_active() || !ClassInfo::hasTable('Member') || Director::is_cli()) {
             return;
@@ -113,7 +119,7 @@ class ControllerCSPExtension extends Extension
         /** @var Controller $owner */
         $owner = $this->owner;
         $cspConfig = $config->get('csp_config');
-        if ($this->owner instanceof LeftAndMain && $cspConfig['in_cms'] === false) {
+        if ($this->owner instanceof LeftAndMain && !$cspConfig['in_cms']) {
             return;
         }
 
@@ -129,45 +135,23 @@ class ControllerCSPExtension extends Extension
         if ($this->addPermissionHeaders) {
             $this->addPermissionsHeaders($permissionConfig, $owner);
         }
-        // Referrer-Policy
-        if ($referrerPolicy = $config->get('referrer')) {
-            $this->addResponseHeaders(['Referrer-Policy' => $referrerPolicy], $owner);
-        }
-        // X-Frame-Options
-        if ($frameOptions = $config->get('frame-options')) {
-            $this->addResponseHeaders(['X-Frame-Options' => $frameOptions], $owner);
-        }
-        // X-Content-Type-Options
-        if ($ContentTypeOptions = $config->get('content-type-options')) {
-            $this->addResponseHeaders(['X-Content-Type-Options' => $ContentTypeOptions], $owner);
-        }
-        // Strict-Transport-Security
-        $hsts = $config->get('HSTS');
-        if ($hsts && $hsts['enabled']) {
-            $header = $hsts['max-age'] ? sprintf('max-age=%s; ', $hsts['max-age']) : '0';
-            $header .= $hsts['include_subdomains'] ? 'includeSubDomains' : '';
-            $this->addResponseHeaders(['Strict-Transport-Security' => trim($header)], $owner);
-        }
         // Access-Control-Allow-Origin
         $cors = $config->get('CORS');
         if ($cors && $cors['enabled']) {
-            $responseHeaders = ['Access-Control-Allow-Methods' => implode(',', $cors['methods'])];
-            if (in_array('*', $cors['allow'])) {
-                $responseHeaders['Access-Control-Allow-Origin'] = '*';
-            } else {
-                $origin = (string)$owner->getRequest()->getHeader('origin');
-                $base = Director::absoluteBaseURL();
-                $trimmedOrigin = $this->trimDomain($origin);
-                $trimmedBase = $this->trimDomain($base);
-                $domains = explode(',', (string)Environment::getEnv('SS_ALLOWED_HOSTS'));
-                $domains = array_merge($domains, $cors['allow'], [$trimmedBase]);
-
-                if (in_array($trimmedOrigin, $domains)) {
-                    $allow = strlen($trimmedOrigin) ? $origin : $base;
-                    $responseHeaders['Access-Control-Allow-Origin'] = $allow;
-                }
-            }
+            $responseHeaders = $this->createACMHeaders($cors, $owner);
             $this->addResponseHeaders($responseHeaders, $owner);
+        }
+        foreach (self::$policyKeyHeader as $key => $headerKey) {
+            if ($value = $config->get($key)) {
+                $this->addResponseHeaders([$headerKey => $value], $owner);
+            }
+        }
+        // Strict-Transport-Security
+        $hsts = $config->get('HSTS');
+        if ($hsts['enabled']) {
+            $header = $hsts['max-age'] ? sprintf('max-age=%s; ', $hsts['max-age']) : '0';
+            $header .= $hsts['include_subdomains'] ? 'includeSubDomains' : '';
+            $this->addResponseHeaders(['Strict-Transport-Security' => trim($header)], $owner);
         }
     }
 
@@ -186,20 +170,22 @@ class ControllerCSPExtension extends Extension
 
     /**
      * @param mixed $ymlConfig
-     * @param Controller $owner
+     * @param Controller|null $owner
      * @return void
      * @throws Exception
      */
-    private function addCSPHeaders(mixed $ymlConfig, Controller $owner): void
+    private function addCSPHeaders(mixed $ymlConfig, Controller|null $owner): void
     {
+        /** @var array $config */
         $config = Injector::inst()->convertServiceProperty($ymlConfig);
         $legacy = $config['legacy'] ?? true;
-        $unsafeCSSInline = $config['style-src']['unsafe-inline'];
-        $unsafeJsInline = $config['script-src']['unsafe-inline'];
-        if (class_exists('\Page') && $owner && $owner->dataRecord) {
-            $config['style-src']['unsafe-inline'] = $unsafeCSSInline || $owner->dataRecord->AllowCSSInline;
-            $config['script-src']['unsafe-inline'] = $unsafeJsInline || $owner->dataRecord->AllowJSInline;
+        $unsafeCSSInline = $config['style-src']['unsafe-inline'] ?? false;
+        $unsafeJsInline = $config['script-src']['unsafe-inline'] ?? false;
+        if ($owner && class_exists('\Page') && method_exists($owner, 'data')) {
+            $config['style-src']['unsafe-inline'] = $unsafeCSSInline || $owner->data()->AllowCSSInline;
+            $config['script-src']['unsafe-inline'] = $unsafeJsInline || $owner->data()->AllowJSInline;
         }
+
         $policy = CSPBuilder::fromArray($config);
 
         $this->addCSP($policy, $owner);
@@ -312,57 +298,12 @@ class ControllerCSPExtension extends Extension
     private function addPermissionsHeaders(mixed $ymlConfig, Controller $controller)
     {
         $config = Injector::inst()->convertServiceProperty($ymlConfig);
+        $permissionHeaders = CSPBackend::config()->get('permission_headers');
         $policies = [];
         foreach ($config as $key => $value) {
-            switch ($key) {
-                case 'accelerator':
-                case 'accelerator_policy':
-                    $policy = 'accelerator';
-                    break;
-                case 'ambient-light-sensor':
-                case 'ambient_light_sensor':
-                case 'ambientLightSensor':
-                    $policy = 'ambient-light-sensor';
-                    break;
-                case 'autoplay':
-                case 'autoPlay':
-                    $policy = 'autoplay';
-                    break;
-                case 'battery':
-                    $policy = 'battery';
-                    break;
-                case 'camera':
-                    $policy = 'camera';
-                    break;
-                case 'display-capture':
-                case 'display_capture':
-                case 'displayCapture':
-                    $policy = 'display-capture';
-                    break;
-                case 'encrypted-media':
-                case 'encrypted_media':
-                case 'encryptedMedia':
-                    $policy = 'encrypted-media';
-                    break;
-                case 'fullscreen':
-                case 'fullScreen':
-                    $policy = 'fullscreen';
-                    break;
-                case 'geolocation':
-                case 'geoLocation':
-                    $policy = 'geolocation';
-                    break;
-                case 'interest-cohort':
-                case 'interest_cohort':
-                case 'interestCohort':
-                    $policy = 'interest-cohort';
-                    break;
-                case 'microphone':
-                    $policy = 'microphone';
-                    break;
-                default:
-                    $policy = false;
-            }
+            $key = strtolower($key);
+            $policy = $permissionHeaders[$key] ?? false;
+
             if ($policy) {
                 $policies[] = $this->ymlToPolicy($policy, $value);
             }
@@ -409,5 +350,32 @@ class ControllerCSPExtension extends Extension
         [$domain] = explode('/', $domain);
 
         return $domain;
+    }
+
+    /**
+     * @param mixed $cors
+     * @param Controller $owner
+     * @return array
+     */
+    protected function createACMHeaders(mixed $cors, Controller $owner): array
+    {
+        $responseHeaders = ['Access-Control-Allow-Methods' => implode(',', $cors['methods'])];
+        if (in_array('*', $cors['allow'])) {
+            $responseHeaders['Access-Control-Allow-Origin'] = '*';
+        } else {
+            $origin = (string)$owner->getRequest()->getHeader('origin');
+            $base = Director::absoluteBaseURL();
+            $trimmedOrigin = $this->trimDomain($origin);
+            $trimmedBase = $this->trimDomain($base);
+            $domains = explode(',', (string)Environment::getEnv('SS_ALLOWED_HOSTS'));
+            $domains = array_merge($domains, $cors['allow'], [$trimmedBase]);
+
+            if (in_array($trimmedOrigin, $domains)) {
+                $allow = strlen($trimmedOrigin) ? $origin : $base;
+                $responseHeaders['Access-Control-Allow-Origin'] = $allow;
+            }
+        }
+
+        return $responseHeaders;
     }
 }

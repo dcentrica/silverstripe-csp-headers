@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Firesphere\CSPHeaders\Builders;
 
 use Exception;
@@ -14,6 +13,12 @@ use SilverStripe\ORM\ValidationException;
 use SilverStripe\View\ArrayData;
 use SilverStripe\Security\Permission;
 
+/**
+ * Class Firesphere\CSPHeaders\Builders\SRIBuilder
+ *
+ * @package Firesphere\CSPHeaders
+ *
+ */
 class SRIBuilder
 {
     use Configurable;

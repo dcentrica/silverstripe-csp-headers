@@ -8,6 +8,11 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\View\HTML;
 
+/**
+ * Class Firesphere\CSPHeaders\Builders
+ *
+ * @package Firesphere\CSPHeaders
+ */
 class BaseBuilder
 {
     /**

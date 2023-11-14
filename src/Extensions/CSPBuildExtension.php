@@ -9,6 +9,7 @@ use SilverStripe\ORM\DB;
 
 /**
  * Class \Firesphere\CSPHeaders\Extensions\CSPBuildExtension
+ * @package Firesphere\CSPHeaders
  *
  * Runs on dev/build to remove all known SRIs
  *

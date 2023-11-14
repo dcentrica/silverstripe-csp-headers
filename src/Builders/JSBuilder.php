@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Firesphere\CSPHeaders\Builders;
 
 use Firesphere\CSPHeaders\Extensions\ControllerCSPExtension;
@@ -11,6 +10,12 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\View\HTML;
 
+/**
+ * Class Firesphere\CSPHeaders\Builders\JSBuilder
+ *
+ * @package Firesphere\CSPHeaders
+ *
+ */
 class JSBuilder extends BaseBuilder implements BuilderInterface
 {
     /**

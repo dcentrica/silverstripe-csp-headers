@@ -19,6 +19,8 @@ use SilverStripe\Security\PermissionProvider;
 /**
  * Class \Firesphere\CSPHeaders\Models\SRI
  *
+ * @package Firesphere\CSPHeaders
+ *
  * @property string $File
  * @property string $SRI
  */

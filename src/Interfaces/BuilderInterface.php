@@ -1,10 +1,15 @@
 <?php
 
-
 namespace Firesphere\CSPHeaders\Interfaces;
 
 use SilverStripe\ORM\ValidationException;
 
+/**
+ * Interface Firesphere\CSPHeaders\Interfaces\BuilderInterface
+ *
+ * @package Firesphere\CSPHeaders
+ *
+ */
 interface BuilderInterface
 {
     /**

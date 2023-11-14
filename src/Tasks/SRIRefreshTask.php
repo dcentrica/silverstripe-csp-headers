@@ -8,9 +8,20 @@ use SilverStripe\Dev\BuildTask;
 use SilverStripe\Dev\CliDebugView;
 use SilverStripe\Dev\DebugView;
 
+/**
+ * Class Firesphere\CSPHeaders\Tasks\SRIRefreshTask
+ *
+ * @package Firesphere\CSPHeaders
+ */
 class SRIRefreshTask extends BuildTask
 {
+    /**
+     * @var string Title of task
+     */
     protected $title = 'Refresh SRI';
+    /**
+     * @var string Description of task
+     */
     protected $description = 'Deletes cache of Sub-resource integrities for js/css resources,
         these will regenerate on the next request.';
 
