@@ -39,6 +39,12 @@
             "php-http/discovery": true
         }
     },
+    "support": {
+        "email": "simon@firesphere.dev",
+        "issues": "https://codeberg.org/Firesphere/silverstripe-csp-headers/issues",
+        "source": "https://codeberg.org/Firesphere/silverstripe-csp-headers",
+        "docs": "https://codeberg.org/Firesphere/silverstripe-csp-headers/wiki"
+    },
     "prefer-stable": true,
     "minimum-stability": "dev"
 }
