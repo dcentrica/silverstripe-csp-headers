@@ -41,4 +41,21 @@ class SRIBuilderTest extends SapphireTest
         // Should not have added integrity to the array
         $this->assertEquals([], $builder->buildSRI('composer.json', []));
     }
+
+    public function testNoSRIOnLocal()
+    {
+        SRIBuilder::config()->set('remote_only', true);
+        $builder = new SRIBuilder();
+        $expected = [
+            'class' => 'testClass'
+        ];
+        $result = $builder->buildSRI('composer.json', $expected);
+        $this->assertEquals($expected, $result);
+        // Frustratingly relying on the internet...
+        $remoteResult = $builder->buildSRI('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js', $expected);
+        $this->assertNotEquals($expected, $remoteResult);
+        $this->assertArrayHasKey('integrity', $remoteResult);
+        $this->assertArrayHasKey('crossorigin', $remoteResult);
+        $this->assertEquals('anonymous', $remoteResult['crossorigin']);
+    }
 }

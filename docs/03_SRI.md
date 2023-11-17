@@ -24,6 +24,20 @@ Firesphere\CSPHeaders\Builders\SRIBuilder:
     - 'https://maps.googleapis.com/'
 ```
 
+## Only calculate SRIs for remote scripts
+
+By default, all scripts get an SRI calculation. This is usually the best.
+
+To avoid problems with CDN providers, it's possible to only calculate remote scripts that are included,
+and serve local scripts "as is";
+
+Enable the `remote_only` flag on the SRIBuilder to apply this behaviour, like so:
+
+```yaml
+Firesphere\CSPHeaders\Builders\SRIBuilder:
+  remote_only: true
+```
+
 # Refreshing calculated values
 
 To force-refresh the SRI calculations, add the URL Parameter `?updatesri=true`. You need to be admin to use this.

@@ -41,14 +41,13 @@ class SRITest extends SapphireTest
 
     public function testOnBeforeWrite()
     {
-        $this->markTestSkipped('No server to test against available at the moment');
         /** @var SRI $sri */
         SRI::get()->removeAll();
         $sri = SRI::create();
-        $sri->File = 'http://127.0.0.1/jstest.js';
+        $sri->File = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js';
         $sri->onBeforeWrite();
-        $hash = hash(CSPBackend::SHA384, file_get_contents('jstest.js'), true);
-        $this->assertEquals('http://127.0.0.1/jstest.js', $sri->File);
+        $hash = hash(CSPBackend::SHA384, file_get_contents('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js'), true);
+        $this->assertEquals('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js', $sri->File);
         $this->assertEquals(base64_encode($hash), $sri->SRI);
     }
 
@@ -65,10 +64,9 @@ class SRITest extends SapphireTest
 
     public function testOnAfterBuild()
     {
-        $this->markTestSkipped('No server to test against available at the moment');
         SRI::get()->removeAll();
         $sri = SRI::create();
-        $sri->File = 'http://127.0.0.1/jstest.js';
+        $sri->File = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js';
         $sri->write();
         $this->assertEquals(1, SRI::get()->count());
         $sriSingleton = singleton(SRI::class);

@@ -10,7 +10,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\ValidationException;
-use SilverStripe\View\ArrayData;
 use SilverStripe\Security\Permission;
 
 /**
@@ -46,27 +45,28 @@ class SRIBuilder
      */
     public function buildSRI($file, array $htmlAttributes): array
     {
-        $skipFiles = $this->config()->get('skip_domains') ?? [];
+        $config = $this->config();
+        if ($config->get('remote_only') && Director::is_site_url($file)) {
+            return $htmlAttributes;
+        }
+        if (!self::$sri) {
+            self::$sri = ArrayList::create(SRI::get()->toArray());
+        }
+        $skipFiles = $config->get('skip_domains') ?? [];
         foreach ($skipFiles as $filename) {
             if (strpos($file, $filename) === 0) {
                 return $htmlAttributes;
             }
         }
-        // If an update is needed, set the SRI to null
-        $sri = SRI::findOrCreate($file);
-        if ($this->shouldUpdateSRI()) {
+        $sri = self::$sri->find('File', $file);
+        if ($sri && $this->shouldUpdateSRI() && !empty($sri->SRI)) {
+            // If an update is needed, set the SRI to null
             $sri->SRI = null;
             $sri->forceChange();
             $sri->write();
         }
-
-        if (!self::$sri) {
-            self::$sri = ArrayList::create(SRI::get()->toArray());
-        }
-        $sri = self::$sri->find('File', $file);
         if (!$sri) {
             $sri = SRI::findOrCreate($file);
-            self::$sri->push($sri);
         }
 
         // To skip applying SRI for an environment use yml to disable jsSRI or cssSRI within chosen envs

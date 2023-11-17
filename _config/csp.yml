@@ -90,6 +90,8 @@ Firesphere\CSPHeaders\View\CSPBackend:
   jsSRI: true
   cssSRI: false
   useNonce: false
+Firesphere\CSPHeaders\Builders\SRIBuilder:
+  remote_only: false
 ---
 Only:
   environment: 'dev'
