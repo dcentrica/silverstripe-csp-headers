@@ -45,11 +45,6 @@
             "php-http/discovery": true
         }
     },
-    "extra": {
-      "branch-alias": {
-         "dev-main": "dev-master"
-      }
-    },
     "support": {
         "email": "simon@firesphere.dev",
         "issues": "https://codeberg.org/Firesphere/silverstripe-csp-headers/issues",
