@@ -91,6 +91,15 @@ Firesphere\CSPHeaders\View\CSPBackend:
     in_cms: false
 ```
 
+## Injecting other headers
+
+If you have other headers you want to inject, you can include those as follows:
+```yaml
+Firesphere\CSPHeaders\View\CSPBackend:
+  headers:
+    headername: "header-value-here"
+```
+
 ## legacy_headers
 
 Setting the `legacy_headers` flag to true, will add the IE legacy headers like `X-CONTENT-SECURITY-POLICY`. Default value is false

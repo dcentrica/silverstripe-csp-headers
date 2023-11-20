@@ -112,7 +112,7 @@ class ControllerCSPExtension extends Extension
      */
     public function onBeforeInit(): void
     {
-        if (self::$isTesting || !DB::is_active() || !ClassInfo::hasTable('Member') || Director::is_cli()) {
+        if (!self::$isTesting && (!DB::is_active() || !ClassInfo::hasTable('Member') || Director::is_cli())) {
             return;
         }
         $config = CSPBackend::config();
@@ -152,6 +152,12 @@ class ControllerCSPExtension extends Extension
             $header = $hsts['max-age'] ? sprintf('max-age=%s; ', $hsts['max-age']) : '0';
             $header .= $hsts['include_subdomains'] ? 'includeSubDomains' : '';
             $this->addResponseHeaders(['Strict-Transport-Security' => trim($header)], $owner);
+        }
+        $otherHeaders = $config->get('headers');
+        if ($otherHeaders) {
+            foreach ($otherHeaders as $name => $value) {
+                $this->addResponseHeaders([$name => trim($value)], $owner);
+            }
         }
     }
 

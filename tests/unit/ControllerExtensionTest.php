@@ -47,6 +47,7 @@ class ControllerExtensionTest extends SapphireTest
         // Should add CSP if enabled (and build headers not requested)
         $config['enabled'] = true;
         CSPBackend::config()->set('csp_config', $config);
+        CSPBackend::config()->set('headers',['random-header' => 'random-value']);
         $request = new HTTPRequest('GET', '/');
         $controller->setRequest($request);
         $extension = new ControllerCSPExtension();
@@ -55,6 +56,8 @@ class ControllerExtensionTest extends SapphireTest
         $this->assertFalse($extension->isAddPolicyHeaders());
         $extension->onBeforeInit();
         $this->assertNotNull($extension->getNonce());
+        $this->assertTrue($extension->isAddPolicyHeaders());
+        $this->assertArrayHasKey('random-header', $controller->getResponse()->getHeaders());
     }
 
     public function testNonceOnExcludedControllers()
