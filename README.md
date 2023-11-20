@@ -22,7 +22,7 @@ PHP 8.0+
 
 ## Configuration and usage
 
-[See the documentation](docs/readme.md)
+[See the documentation](https://codeberg.org/Firesphere/silverstripe-csp-headers/wiki)
 
 # WARNING
 
