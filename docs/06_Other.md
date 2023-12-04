@@ -23,3 +23,13 @@ Note that the module (currently) does _NOT_ validate if the values in the YML ar
 [X-Xss-Protection is an outdated header, that is not supported or used in any browser nowadays.](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection#browser_compatibility)
 
 If you really need it because the client/pentester insists it's necessary, put it in your nginx or apache configuration.
+
+
+## Injecting other headers
+
+If you have other headers you want to inject, you can include those as follows:
+```yaml
+Firesphere\CSPHeaders\View\CSPBackend:
+  headers:
+    headername: "header-value-here"
+```
