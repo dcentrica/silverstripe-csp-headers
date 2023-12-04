@@ -1,4 +1,4 @@
-Firesphere\CSPHeaders\View\Backend:
+Firesphere\CSPHeaders\View\CSPBackend:
   permission_headers:
     accelerator: 'accelerator'
     accelerator_policy: 'accelerator'
