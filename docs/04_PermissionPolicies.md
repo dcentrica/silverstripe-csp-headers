@@ -10,7 +10,7 @@ If this header is _not_ configured and enabled, the browser defaults of `allow: 
 Firesphere\CSPHeaders\View\CSPBackend:
   permissions_config:
     enabled: true
-    accelerator:
+    accelerometer:
       allow: [none]
     ambient-light-sensor:
       allow: [none]

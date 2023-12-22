@@ -1,7 +1,8 @@
 Firesphere\CSPHeaders\View\CSPBackend:
   permission_headers:
-    accelerator: 'accelerator'
-    accelerator_policy: 'accelerator'
+    accelerator: 'accelerometer'
+    accelerometer: 'accelerometer'
+    accelerometer_policy: 'accelerometer'
     ambient-light-sensor: 'ambient-light-sensor'
     ambient_light_sensor: 'ambient-light-sensor'
     ambientlightsensor: 'ambient-light-sensor'
