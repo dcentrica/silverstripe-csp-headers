@@ -34,7 +34,7 @@ class CSPDomain extends DataObject implements PermissionProvider
     ];
 
     private static $belongs_many_many = [
-        'Pages' => Page::class
+        'Pages' => Page::class . '.CSPDomains'
     ];
 
     private static $summary_fields = [
