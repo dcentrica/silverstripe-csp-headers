@@ -193,7 +193,11 @@ class ControllerCSPExtension extends Extension
         }
 
         $policy = CSPBuilder::fromArray($config);
+        $endpoints = CSPBackend::config()->get('report-to');
 
+        foreach ($endpoints as $endpoint) {
+            $policy->addReportEndpoints($endpoint);
+        }
         $this->addCSP($policy, $owner);
         $this->addInlineJSPolicy($policy, $config);
         $this->addInlineCSSPolicy($policy, $config);

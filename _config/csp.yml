@@ -54,6 +54,11 @@ Firesphere\CSPHeaders\View\CSPBackend:
     in_cms: false
     report-only: false
     report-uri: "https://127.0.0.1/r/d/csp/enforce"
+    report-to:
+      - group: csp-endpoint
+        max_age: 10886400
+        endpoints:
+          - url: https://example.com/csp-reports
     base-uri:
       allow: []
       self: true
