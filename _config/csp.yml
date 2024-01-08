@@ -49,16 +49,17 @@ Firesphere\CSPHeaders\View\CSPBackend:
     enabled: false
     max-age: 31536000
     include_subdomains: true
+  report-to:
+    - group: csp-endpoint
+      max_age: 10886400
+      endpoints:
+        - url: https://example.com/csp-reports
   csp_config:
     enabled: true
     in_cms: false
     report-only: false
     report-uri: "https://127.0.0.1/r/d/csp/enforce"
-    report-to:
-      - group: csp-endpoint
-        max_age: 10886400
-        endpoints:
-          - url: https://example.com/csp-reports
+    report-to: 'csp-endpoint'
     base-uri:
       allow: []
       self: true
