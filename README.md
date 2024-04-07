@@ -11,6 +11,10 @@ Adds CSP headers to your request, based on configuration in a yml file.
 
 [Setting up a report-uri account is free and easy](https://report-uri.com)
 
+## Disclaimer
+
+If this module breaks your website, you get to keep all the pieces.
+
 ## Requirements
 
 SilverStripe Framework 4.x+
