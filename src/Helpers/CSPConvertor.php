@@ -8,10 +8,9 @@ use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class \Firesphere\CSPHeaders\Helpers\CSPConvertor
+ * Helper class to convert a manually written CSP header to YML
  *
  * @package Firesphere\CSPHeaders
- *
- * Helper class to convert a manually written CSP header to YML
  */
 class CSPConvertor
 {

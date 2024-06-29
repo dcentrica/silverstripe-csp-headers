@@ -16,9 +16,7 @@ use SilverStripe\ORM\ManyManyList;
 
 /**
  * Class \Firesphere\CSPHeaders\Extensions\SiteTreeExtension
- *
  * @package Firesphere\CSPHeaders
- *
  * @property Page|PageExtension $owner
  * @method ManyManyList|CSPDomain[] CSPDomains()
  */

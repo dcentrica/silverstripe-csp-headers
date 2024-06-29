@@ -4,8 +4,6 @@
 
 - [Content Security Policy header generation](02_CSP_Headers.md)
 - [SRI calculation](03_SRI.md)
-- [Permission Policies](04_PermissionPolicies.md)
-- [HSTS](05_HSTS.md)
 - [Various other headers](06_Other.md)
 
 ## API Documentation

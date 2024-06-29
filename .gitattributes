@@ -5,3 +5,4 @@
 /codecov.yml export-ignore
 /phpcs.xml.dist export-ignore
 /.circleci export-ignore
+/.woodpecker export-ignore

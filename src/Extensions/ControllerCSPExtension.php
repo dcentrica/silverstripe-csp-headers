@@ -23,12 +23,7 @@ use function hash;
 
 /**
  * Class \Firesphere\CSPHeaders\Extensions\ControllerCSPExtension
- *
  * @package Firesphere\CSPHeaders
- *
- * This extension is applied to the PageController, to avoid duplicates.
- * Any duplicates may be caused by extended classes. It should however, not affect the outcome
- *
  * @property Controller|ControllerCSPExtension $owner
  */
 class ControllerCSPExtension extends Extension
@@ -52,23 +47,10 @@ class ControllerCSPExtension extends Extension
      */
     protected static $inlineCSS = [];
     /**
-     * @var string[] YML keys to actual header name
-     */
-    protected static $policyKeyHeader = [
-        'referrer'             => 'Referrer-Policy',
-        'frame-options'        => 'X-Frame-Options',
-        'content-type-options' => 'X-Content-Type-Options'
-    ];
-    /**
      * Should we generate the policy headers or not
      * @var bool
      */
     protected $addPolicyHeaders;
-    /**
-     * Should permission policies be added
-     * @var bool
-     */
-    protected $addPermissionHeaders;
     /**
      * @var string randomised sha512 nonce for enabling scripts if you don't want to use validating of the full script
      */
@@ -123,35 +105,11 @@ class ControllerCSPExtension extends Extension
             return;
         }
 
-        $permissionConfig = $config->get('permissions_config');
         $this->addPolicyHeaders = ($cspConfig['enabled'] ?? false) || static::checkCookie($owner->getRequest());
-        $this->addPermissionHeaders = $permissionConfig['enabled'] ?? false;
         /** @var Controller $owner */
         // Policy-headers
         if ($this->addPolicyHeaders) {
             $this->addCSPHeaders($cspConfig, $owner);
-        }
-        // Permission-policy
-        if ($this->addPermissionHeaders) {
-            $this->addPermissionsHeaders($permissionConfig, $owner);
-        }
-        // Access-Control-Allow-Origin
-        $cors = $config->get('CORS');
-        if ($cors && $cors['enabled']) {
-            $responseHeaders = $this->createACMHeaders($cors, $owner);
-            $this->addResponseHeaders($responseHeaders, $owner);
-        }
-        foreach (self::$policyKeyHeader as $key => $headerKey) {
-            if ($value = $config->get($key)) {
-                $this->addResponseHeaders([$headerKey => $value], $owner);
-            }
-        }
-        // Strict-Transport-Security
-        $hsts = $config->get('HSTS');
-        if ($hsts['enabled']) {
-            $header = $hsts['max-age'] ? sprintf('max-age=%s; ', $hsts['max-age']) : '0';
-            $header .= $hsts['include_subdomains'] ? 'includeSubDomains' : '';
-            $this->addResponseHeaders(['Strict-Transport-Security' => trim($header)], $owner);
         }
         $otherHeaders = $config->get('headers');
         if ($otherHeaders) {
@@ -301,92 +259,10 @@ class ControllerCSPExtension extends Extension
     }
 
     /**
-     * Add the Permissions-Policy header
-     * @param array $ymlConfig
-     * @param Controller $controller
-     * @return void
-     */
-    private function addPermissionsHeaders(mixed $ymlConfig, Controller $controller)
-    {
-        $config = Injector::inst()->convertServiceProperty($ymlConfig);
-        $permissionHeaders = CSPBackend::config()->get('permission_headers');
-        $policies = [];
-        foreach ($config as $key => $value) {
-            $key = strtolower($key);
-            $policy = $permissionHeaders[$key] ?? false;
-
-            if ($policy) {
-                $policies[] = $this->ymlToPolicy($policy, $value);
-            }
-        }
-        $headerAsArray = ['Permissions-Policy' => implode(', ', $policies)];
-
-        $this->addResponseHeaders($headerAsArray, $controller);
-    }
-
-    private function ymlToPolicy($key, $yml)
-    {
-        $value = [];
-        if (!empty($yml['self'])) {
-            $value[] = "'self'";
-        }
-        if (!empty($yml['allow']) && !in_array('none', $yml['allow'])) {
-            $value[] = implode(', ', $yml['allow']);
-        }
-        // If it's none, then anything else we did is useless
-        if (in_array('none', $yml['allow'])) {
-            $value = ["'none'"];
-        }
-
-        return sprintf('%s=(%s)', $key, implode(' ', $value));
-    }
-
-    /**
      * @return bool
      */
     public function isAddPolicyHeaders(): bool
     {
         return $this->addPolicyHeaders ?? false;
-    }
-
-    /**
-     * Remove https://, trailing slash, etc.
-     * @param $domain
-     * @return string
-     */
-    private function trimDomain($domain)
-    {
-        $domain = explode('//', $domain);
-        $domain = end($domain);
-        [$domain] = explode('/', $domain);
-
-        return $domain;
-    }
-
-    /**
-     * @param mixed $cors
-     * @param Controller $owner
-     * @return array
-     */
-    protected function createACMHeaders(mixed $cors, Controller $owner): array
-    {
-        $responseHeaders = ['Access-Control-Allow-Methods' => implode(',', $cors['methods'])];
-        if (in_array('*', $cors['allow'])) {
-            $responseHeaders['Access-Control-Allow-Origin'] = '*';
-        } else {
-            $origin = (string)$owner->getRequest()->getHeader('origin');
-            $base = Director::absoluteBaseURL();
-            $trimmedOrigin = $this->trimDomain($origin);
-            $trimmedBase = $this->trimDomain($base);
-            $domains = explode(',', (string)Environment::getEnv('SS_ALLOWED_HOSTS'));
-            $domains = array_merge($domains, $cors['allow'], [$trimmedBase]);
-
-            if (in_array($trimmedOrigin, $domains)) {
-                $allow = strlen($trimmedOrigin) ? $origin : $base;
-                $responseHeaders['Access-Control-Allow-Origin'] = $allow;
-            }
-        }
-
-        return $responseHeaders;
     }
 }
