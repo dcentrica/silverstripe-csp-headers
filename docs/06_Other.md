@@ -1,5 +1,8 @@
 # Other security headers
 
+### If you are on release 2.x, these headers have moved to https://codeberg.org/Firesphere/silverstripe-permissionheaders
+
+
 A few other security related headers are supported.
 - Referer-policy
 - X-Frame-Options
