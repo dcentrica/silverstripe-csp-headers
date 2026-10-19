@@ -4,6 +4,6 @@ SilverStripe\Control\Controller:
 Page:
   extensions:
     - Firesphere\CSPHeaders\Extensions\PageExtension
-SilverStripe\Dev\DevBuildController:
+SilverStripe\Dev\Command\DbBuild:
   extensions:
     - Firesphere\CSPHeaders\Extensions\CSPBuildExtension

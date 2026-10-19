@@ -3,10 +3,10 @@
 namespace Firesphere\CSPHeaders\Tasks;
 
 use Firesphere\CSPHeaders\Models\SRI;
-use SilverStripe\Control\Director;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\Dev\CliDebugView;
-use SilverStripe\Dev\DebugView;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 
 /**
  * Class Firesphere\CSPHeaders\Tasks\SRIRefreshTask
@@ -18,24 +18,22 @@ class SRIRefreshTask extends BuildTask
     /**
      * @var string Title of task
      */
-    protected $title = 'Refresh SRI';
+    protected string $title = 'Refresh SRI';
     /**
      * @var string Description of task
      */
-    protected $description = 'Deletes cache of Sub-resource integrities for js/css resources,
+    protected static string $description = 'Deletes cache of Sub-resource integrities for js/css resources,
         these will regenerate on the next request.';
 
     /**
      * Deletes the Sub-resource integrity values on build of the database
      * so they're regenerated next time that file is required.
      */
-    public function run($request)
+    protected function execute(InputInterface $input, PolyOutput $output): int
     {
-        $renderer = Director::is_cli() ? CliDebugView::create() : DebugView::create();
-        echo $renderer->renderHeader();
-        echo $renderer->renderInfo('Refresh SRI Task', 'Removing SRI values...');
+        $output->writeln('Removing SRI values...');
         SRI::get()->removeAll();
-        echo $renderer->renderMessage('Done', null, false);
-        echo $renderer->renderFooter();
+
+        return Command::SUCCESS;
     }
 }

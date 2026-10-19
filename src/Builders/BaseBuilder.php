@@ -52,8 +52,7 @@ class BaseBuilder
      */
     public static function getNonce(array &$options): void
     {
-        if (CSPBackend::isUsesNonce() && Controller::has_curr()) {
-            /** @var Controller|ControllerCSPExtension $ctrl */
+        if (CSPBackend::isUsesNonce() && $ctrl = Controller::curr()) {
             $ctrl = Controller::curr();
             if ($ctrl && $ctrl->hasMethod('getNonce')) {
                 $options['nonce'] = $ctrl->getNonce();
@@ -89,8 +88,8 @@ class BaseBuilder
      */
     public static function getCurrentRequest(): HTTPRequest|null
     {
-        if (!self::$currentRequest && Controller::has_curr()) {
-            self::setCurrentRequest(Controller::curr()->getRequest());
+        if (!self::$currentRequest && $ctrl = Controller::curr()) {
+            self::setCurrentRequest($ctrl->getRequest());
         }
 
         return self::$currentRequest;

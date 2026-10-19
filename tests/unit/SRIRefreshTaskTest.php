@@ -5,8 +5,9 @@ namespace Firesphere\CSPHeaders\Tests;
 
 use Firesphere\CSPHeaders\Models\SRI;
 use Firesphere\CSPHeaders\Tasks\SRIRefreshTask;
-use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\PolyExecution\PolyOutput;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class SRIRefreshTaskTest extends SapphireTest
 {
@@ -21,8 +22,7 @@ class SRIRefreshTaskTest extends SapphireTest
 
         // Test that the task clears out all SRI from the database
         $task = new SRIRefreshTask();
-        $request = new HTTPRequest('GET', '/');
-        $task->run($request);
+        $task->run(new ArrayInput([]), PolyOutput::create(PolyOutput::FORMAT_ANSI));
         $this->assertEquals(0, SRI::get()->count());
     }
 }

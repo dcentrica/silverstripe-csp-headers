@@ -8,8 +8,8 @@ use Firesphere\CSPHeaders\View\CSPBackend;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Model\List\ArrayList;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\Security\Permission;
 
 /**
