@@ -1,6 +1,6 @@
 steps:
-  - name: php82cms5
-    image: cimg/php:8.2
+  - name: php83cms6
+    image: cimg/php:8.3
     when:
       - event: [ pull_request, tag ]
       - event: push
@@ -25,7 +25,7 @@ steps:
       - vendor/bin/phpunit tests/unit
 services:
   database:
-    image: mariadb:10.9
+    image: mariadb:11.0
     environment:
       - MYSQL_USER=root
       - MYSQL_ROOT_PASSWORD=toor

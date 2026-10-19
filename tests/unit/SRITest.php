@@ -4,9 +4,7 @@
 namespace Firesphere\CSPHeaders\Tests;
 
 use Firesphere\CSPHeaders\Models\SRI;
-use Firesphere\CSPHeaders\Tasks\SRIRefreshTask;
 use Firesphere\CSPHeaders\View\CSPBackend;
-use SilverStripe\Control\Controller;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\DefaultAdminService;
 
@@ -41,8 +39,8 @@ class SRITest extends SapphireTest
 
     public function testOnBeforeWrite()
     {
-        /** @var SRI $sri */
         SRI::get()->removeAll();
+        /** @var SRI $sri */
         $sri = SRI::create();
         $sri->File = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js';
         $sri->onBeforeWrite();
@@ -53,8 +51,8 @@ class SRITest extends SapphireTest
 
     public function testFindOrCreate()
     {
-        /** @var SRI $sri */
         SRI::get()->removeAll();
+        /** @var SRI $sri */
         $sri = SRI::findOrCreate('/README.md');
         $hash = hash(CSPBackend::SHA384, file_get_contents('README.md'), true);
 

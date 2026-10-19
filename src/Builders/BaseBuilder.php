@@ -2,7 +2,6 @@
 
 namespace Firesphere\CSPHeaders\Builders;
 
-use Firesphere\CSPHeaders\Extensions\ControllerCSPExtension;
 use Firesphere\CSPHeaders\View\CSPBackend;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
@@ -52,10 +51,8 @@ class BaseBuilder
      */
     public static function getNonce(array &$options): void
     {
-        if (CSPBackend::isUsesNonce() && Controller::has_curr()) {
-            /** @var Controller|ControllerCSPExtension $ctrl */
-            $ctrl = Controller::curr();
-            if ($ctrl && $ctrl->hasMethod('getNonce')) {
+        if (CSPBackend::isUsesNonce() && $ctrl = Controller::curr()) {
+            if ($ctrl->hasMethod('getNonce')) {
                 $options['nonce'] = $ctrl->getNonce();
             }
         }
@@ -89,8 +86,8 @@ class BaseBuilder
      */
     public static function getCurrentRequest(): HTTPRequest|null
     {
-        if (!self::$currentRequest && Controller::has_curr()) {
-            self::setCurrentRequest(Controller::curr()->getRequest());
+        if (!self::$currentRequest && $ctrl = Controller::curr()) {
+            self::setCurrentRequest($ctrl->getRequest());
         }
 
         return self::$currentRequest;

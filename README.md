@@ -17,8 +17,8 @@ If this module breaks your website, you get to keep all the pieces.
 
 ## Requirements
 
-SilverStripe Framework 4.x+
-PHP 8.0+
+SilverStripe Framework 6.x+
+PHP 8.3+
 
 ## Installation
 

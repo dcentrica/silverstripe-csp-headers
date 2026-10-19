@@ -4,13 +4,12 @@ namespace Firesphere\CSPHeaders\Extensions;
 
 use Firesphere\CSPHeaders\Models\CSPDomain;
 use Page;
-use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Extension;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
 use SilverStripe\Forms\Tab;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\ManyManyList;
 
@@ -20,7 +19,7 @@ use SilverStripe\ORM\ManyManyList;
  * @property Page|PageExtension $owner
  * @method ManyManyList|CSPDomain[] CSPDomains()
  */
-class PageExtension extends DataExtension
+class PageExtension extends Extension
 {
 
     private static $db = [
