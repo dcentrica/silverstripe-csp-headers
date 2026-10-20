@@ -2,7 +2,7 @@
 
 namespace Firesphere\CSPHeaders\Interfaces;
 
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 
 /**
  * Interface Firesphere\CSPHeaders\Interfaces\BuilderInterface

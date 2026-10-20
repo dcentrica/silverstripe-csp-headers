@@ -3,14 +3,12 @@
 
 namespace Firesphere\CSPHeaders\Tests;
 
-use BadMethodCallException;
 use Firesphere\CSPHeaders\Extensions\ControllerCSPExtension;
 use Firesphere\CSPHeaders\View\CSPBackend;
 use Page;
 use PageController;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Cookie;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\NullHTTPRequest;
 use SilverStripe\Dev\SapphireTest;

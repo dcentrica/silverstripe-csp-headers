@@ -9,7 +9,7 @@ use Firesphere\CSPHeaders\Traits\CSPBackendTrait;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Manifest\ModuleResourceLoader;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\Core\Validation\ValidationException;
 use SilverStripe\View\Requirements_Backend;
 
 /**
